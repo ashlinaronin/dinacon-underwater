@@ -4,11 +4,16 @@
   <script src="https://unpkg.com/@tensorflow/tfjs"></script>
   <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
   <script src="https://unpkg.com/@tensorflow-models/knn-classifier"></script>
+  <style>
+    #images-under-test img {
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
 <div id="console"></div>
-<!-- Add an image that we will use to test -->
-<img id="img-under-test" src="fish-examples/2019-08-26_0611.jpg" width=227 height=227/>
+
+<div id="images-under-test"></div>
 
 <!-- Load index.js after the content of the page -->
 <script src="mobilenet.js"></script>
