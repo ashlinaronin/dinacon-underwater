@@ -49,14 +49,16 @@ async function testImage(img) {
   if (classifier.getNumClasses() > 0) {
     // Get the activation from mobilenet from the test image.
     const activation = net.infer(img, 'conv_preds');
+
     // Get the most likely class and confidences from the classifier module.
     const result = await classifier.predictClass(activation);
-    console.log(result);
 
-    // document.getElementById('console').innerText = `
-    //   prediction: ${classes[result.classIndex]}\n
-    //   probability: ${result.confidences[result.classIndex]}
-    // `;
+    const resultText = document.createElement('div');
+    resultText.innerText = `
+      prediction: ${classes[result.classIndex]}\n
+      confidence: ${result.confidences[result.classIndex]}
+    `;
+    img.parentNode.insertBefore(resultText, img.nextSibling);
   }
 }
 
