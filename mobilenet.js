@@ -1,5 +1,8 @@
 const webcamElement = document.getElementById('webcam');
+const examplesFish = document.getElementById('examples-fish');
+const examplesNoFish = document.getElementById('examples-nofish');
 const classifier = knnClassifier.create();
+const classes = ['fish', 'nofish'];
 let net;
 
 async function setupWebcam() {
@@ -30,18 +33,22 @@ async function app() {
 
   await setupWebcam();
 
-  // reads an image from the webcam and associates it with a specific class index
-  const addExample = classId => {
+  Array.from(examplesFish.children).forEach(el => {
     // get the intermediate activation of MobileNet 'conv_preds' and pass that to the KNN classifier
-    const activation = net.infer(webcamElement, 'conv_preds');
+    const activation = net.infer(el, 'conv_preds');
 
     // pass the intermediate activation to the classifier
-    classifier.addExample(activation, classId);
-  };
+    classifier.addExample(activation, 0);
+  });
 
-  // When clicking a button, add an example for that class.
-  document.getElementById('class-fish').addEventListener('click', () => addExample(0));
-  document.getElementById('class-nofish').addEventListener('click', () => addExample(1));
+  Array.from(examplesNoFish.children).forEach(el => {
+    // get the intermediate activation of MobileNet 'conv_preds' and pass that to the KNN classifier
+    const activation = net.infer(el, 'conv_preds');
+
+    // pass the intermediate activation to the classifier
+    classifier.addExample(activation, 1);
+  });
+
 
   while (true) {
     if (classifier.getNumClasses() > 0) {
@@ -50,7 +57,6 @@ async function app() {
       // Get the most likely class and confidences from the classifier module.
       const result = await classifier.predictClass(activation);
 
-      const classes = ['fish', 'nofish'];
       document.getElementById('console').innerText = `
         prediction: ${classes[result.classIndex]}\n
         probability: ${result.confidences[result.classIndex]}
